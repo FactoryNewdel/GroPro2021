@@ -21,5 +21,8 @@ public class Main {
         List<Storage> storages = FileHandler.transformFiles(files);
         System.out.println(storages.get(7));
         //FileHandler.transformIntoFiles(storages);
+        for (Storage storage : storages) {
+            new Puzzle(storage).solve();
+        }
     }
 }

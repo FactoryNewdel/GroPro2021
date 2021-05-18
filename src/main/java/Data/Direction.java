@@ -1,13 +1,20 @@
 package Data;
 
 public enum Direction {
-    UP(1, 0, 0, 1),
-    LEFT(2, 0, 1, 0),
-    FRONT(3, 1, 0, 0),
-    RIGHT(4, 0, -1, 0),
-    BACK(5, -1, 0, 0),
-    DOWN(6, 0, 0, -1);
+    UP(1),
+    LEFT(2),
+    FRONT(3),
+    RIGHT(4),
+    BACK(5),
+    DOWN(6);
 
-    Direction(int i, int i1, int i2, int i3) {
+    private int i;
+
+    Direction(int i) {
+        this.i = i;
+    }
+
+    public int getI() {
+        return i;
     }
 }

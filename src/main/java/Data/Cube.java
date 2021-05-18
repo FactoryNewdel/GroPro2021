@@ -30,5 +30,9 @@ public class Cube {
         return cubeType;
     }
 
+    public int getTriangle(int index) {
+        return triangle[index];
+    }
+
     //TODO toString
 }

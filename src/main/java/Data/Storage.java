@@ -12,8 +12,8 @@ public class Storage {
     private int dimX;
     private int dimY;
     private int dimZ;
-    private Map<String, Cube> cubes;
-    private Map<CubeType, List<String>> cubeTypeMap;
+    private HashMap<String, Cube> cubes;
+    private HashMap<CubeType, List<String>> cubeTypeMap;
     private String[][][] solution;
 
     public Storage(String path) {
@@ -52,6 +52,10 @@ public class Storage {
         return dimZ;
     }
 
+    public Vektor getDimVector() {
+        return new Vektor(dimX, dimY, dimZ);
+    }
+
     public void addCube(Cube cube) {
         cubes.put(cube.getName(), cube);
     }
@@ -71,6 +75,10 @@ public class Storage {
         }
     }
 
+    public HashMap<CubeType, List<String>> getOrderedCubes() {
+        return cubeTypeMap;
+    }
+
     public void setDimensionString(String s) {
         dimensionString = s;
         String[] split = s.split("\\s+")[1].split(",");
@@ -81,6 +89,10 @@ public class Storage {
 
     public String getDimensionString() {
         return dimensionString;
+    }
+
+    public void setSolution(String[][][] solution) {
+        this.solution = solution;
     }
 
     public String[][][] getSolution() {
