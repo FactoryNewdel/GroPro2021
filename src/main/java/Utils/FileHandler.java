@@ -48,7 +48,9 @@ public class FileHandler {
             }
             storage.addCube(new Cube(split[0], triangles));
         }
-
+        try {
+            storage.orderGroups();
+        } catch (RuntimeException ignored) {}
         return storage;
     }
 

@@ -2,6 +2,8 @@ package Data;
 
 import java.util.*;
 
+import static Data.CubeType.*;
+
 public class Storage {
     private String path;
     private String solutionPath;
@@ -11,12 +13,18 @@ public class Storage {
     private int dimY;
     private int dimZ;
     private Map<String, Cube> cubes;
+    private Map<CubeType, List<String>> cubeTypeMap;
     private String[][][] solution;
 
     public Storage(String path) {
         this.path = path;
         comments = new ArrayList<>();
         cubes = new HashMap<>();
+        cubeTypeMap = new HashMap<>();
+        cubeTypeMap.put(ECKE, new ArrayList<>());
+        cubeTypeMap.put(KANTE, new ArrayList<>());
+        cubeTypeMap.put(SEITE, new ArrayList<>());
+        cubeTypeMap.put(MITTE, new ArrayList<>());
         //TODO solutionPath
     }
 
@@ -53,6 +61,16 @@ public class Storage {
         return cubes.get(name);
     }
 
+    public Map<String, Cube> getCubes() {
+        return cubes;
+    }
+
+    public void orderGroups() {
+        for (Cube cube : cubes.values()) {
+            cubeTypeMap.get(cube.getType()).add(cube.getName());
+        }
+    }
+
     public void setDimensionString(String s) {
         dimensionString = s;
         String[] split = s.split("\\s+")[1].split(",");
@@ -77,6 +95,7 @@ public class Storage {
                 ", comments=" + comments +
                 ", dimensionString='" + dimensionString + '\'' +
                 ", cubes=" + cubes +
+                ", orderedCubes=" + cubeTypeMap +
                 ", solution=" + Arrays.toString(solution) +
                 '}';
     }

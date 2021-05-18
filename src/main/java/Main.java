@@ -19,7 +19,7 @@ public class Main {
             files.add(file);
         }
         List<Storage> storages = FileHandler.transformFiles(files);
-        
+        System.out.println(storages.get(7));
         //FileHandler.transformIntoFiles(storages);
     }
 }
