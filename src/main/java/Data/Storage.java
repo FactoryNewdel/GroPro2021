@@ -13,7 +13,7 @@ public class Storage {
     private int dimY;
     private int dimZ;
     private HashMap<String, Cube> cubes;
-    private HashMap<CubeType, List<String>> cubeTypeMap;
+    private HashMap<CubeType, ArrayList<String>> cubeTypeMap;
     private String[][][] solution;
 
     public Storage(String path) {
@@ -26,6 +26,15 @@ public class Storage {
         cubeTypeMap.put(SEITE, new ArrayList<>());
         cubeTypeMap.put(MITTE, new ArrayList<>());
         //TODO solutionPath
+        String[] pathSplit = path.split("\\.");
+        StringBuilder sb = new StringBuilder();
+        int length = pathSplit.length;
+        for (int i = 0; i < length; i++) {
+            if (i != 0) sb.append('.');
+            sb.append(pathSplit[i]);
+            if (i == length - 2) sb.append("_Loesung_");
+        }
+        solutionPath = sb.toString();
     }
 
     public String getSolutionPath() {
@@ -71,11 +80,13 @@ public class Storage {
 
     public void orderGroups() {
         for (Cube cube : cubes.values()) {
+            System.out.println(cube);
             cubeTypeMap.get(cube.getType()).add(cube.getName());
         }
+        System.out.println(cubeTypeMap);
     }
 
-    public HashMap<CubeType, List<String>> getOrderedCubes() {
+    public HashMap<CubeType, ArrayList<String>> getOrderedCubes() {
         return cubeTypeMap;
     }
 

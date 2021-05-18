@@ -48,9 +48,9 @@ public class FileHandler {
             }
             storage.addCube(new Cube(split[0], triangles));
         }
-        try {
+        /*try {
             storage.orderGroups();
-        } catch (RuntimeException ignored) {}
+        } catch (RuntimeException ignored) {}*/
         return storage;
     }
 
@@ -67,6 +67,7 @@ public class FileHandler {
 
     public static void transformIntoFile(Storage storage) throws IOException {
         FileWriter fileWriter = new FileWriter(storage.getSolutionPath());
+        System.out.println(storage.getSolutionPath());
         for (String comment : storage.getComments()) {
             fileWriter.write(comment + "\n");
         }
@@ -75,7 +76,7 @@ public class FileHandler {
         for (int i = 0; i < solution.length; i++) {
             for (int j = 0; j < solution[0].length; j++) {
                 for (int k = 0; k < solution[0][0].length; k++) {
-                    fileWriter.write(storage.getCube(solution[i][j][j]) + "\n");
+                    fileWriter.write("[" + i + "," + j + "," + k + "] " + storage.getCube(solution[i][j][k]) + "\n");
                 }
             }
         }
