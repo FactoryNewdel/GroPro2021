@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+java.Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
+Rsrc-Class-Path: ./
+Rsrc-java.Main-Class: HolzRaetselTester.RaetselTester
+Class-Path: .
+
