@@ -11,6 +11,7 @@ public class Main {
         List<File> files = new ArrayList<>();
         for (String path : args) {
             File file = new File(path);
+            if (!file.exists()) continue;
             if (file.isDirectory()) {
                 files.addAll(Arrays.asList(file.listFiles()));
                 continue;
@@ -18,6 +19,7 @@ public class Main {
             files.add(file);
         }
         List<Storage> storages = FileHandler.transformFiles(files);
-
+        
+        //FileHandler.transformIntoFiles(storages);
     }
 }
