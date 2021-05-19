@@ -1,10 +1,10 @@
-import Data.*;
-import Utils.*;
+import Data.Cube;
+import Data.Storage;
+import Utils.FileHandler;
+import Utils.Puzzle;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {

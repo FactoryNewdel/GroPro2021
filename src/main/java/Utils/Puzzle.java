@@ -28,14 +28,12 @@ public class Puzzle {
             while (!startCube.checkBounds(0, 0, 0, dimVektor)) startCube.nextRotation(0, 0, 0, dimVektor);
             solution[0][0][0] = startCube.getName();
         }
-        if (findFitOrdered(b ? 1 : 0, 0, 0/*, map*/)) {
+        if (findFitOrdered(b ? 1 : 0, 0, 0)) {
             storage.setSolution(solution);
         }
     }
 
     private boolean findFitOrdered(int x, int y, int z/*, HashMap<CubeType, ArrayList<String>> map*/) {
-        //System.out.println(Arrays.deepToString(solution));
-        //System.out.println(map);
         int connections = 0;
         if (x > 0) connections++;
         if (y > 0) connections++;
@@ -46,8 +44,6 @@ public class Puzzle {
 
         CubeType curType = Cube.getCubeType(dimVektor, connections);
 
-
-        //for (String cubeName : map.get(curType)) {
         ArrayList<String> list = map.get(curType);
         for (int i = 0; i < list.size(); i++) {
             String cubeName = list.get(i);
@@ -59,29 +55,13 @@ public class Puzzle {
                     cube.nextRotation(x, y, z, dimVektor);
                     continue;
                 }
-
-                //if (y > 2) System.out.println("y > 2: " + Arrays.deepToString(solution));
-                if (z > 8 && y > 8 && x > -1) System.out.println("z > 2: " + Arrays.deepToString(solution));
-                //System.out.println("Solution1 = " + Arrays.deepToString(solution));
                 solution[x][y][z] = cubeName;
-                //System.out.println("Solution2 = " + Arrays.deepToString(solution));
                 if (x == dimVektor.x - 1 && y == dimVektor.y - 1 && z == dimVektor.z - 1) {
                     System.out.println(Arrays.deepToString(solution));
                     return true;
                 }
-
-                //ArrayList<String> temp = (ArrayList<String>) map.get(curType).clone();
-                //temp.put(curType, new ArrayList<>());
-                /*for (String cloneName : map.get(curType)) {
-                    temp.get(curType).add(cloneName);
-                }*/
-                //temp.get(curType).remove(cubeName);
-                //System.out.println(x + "," + y + "," + z + ": " + Arrays.deepToString(solution));
-                //temp.remove(cubeName);
-                //map.put(curType, temp);
-                //map.get(curType).add("-" + cubeName);
-                //System.out.println("Removing");
                 list.remove(i);
+
                 int nextX = x + 1;
                 int nextY = y;
                 int nextZ = z;
@@ -94,19 +74,17 @@ public class Puzzle {
                     nextZ++;
                 }
                 if (findFitOrdered(nextX, nextY, nextZ)) return true;
-                //System.out.println("Solution3 = " + Arrays.deepToString(solution));
+
                 solution[x][y][z] = null;
                 list.add(i, cubeName);
                 if (!cube.hasNextRotation(true)) break;
                 cube.nextRotation(x, y, z, dimVektor);
-                //System.out.println("Solution4 = " + Arrays.deepToString(solution));
             }
         }
         return false;
     }
 
     private boolean isFitting(int x, int y, int z, Cube cube) {
-        //if (cube.getName().equals("Teil 14")) System.out.println(cube);
         Cube cube1;
         if (x > 0 && (cube1 = storage.getCube(solution[x - 1][y][z])) != null) {
             if (!trianglesFit(cube.getTriangle(BACK), cube1.getTriangle(FRONT), false)) return false;
