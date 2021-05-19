@@ -1,0 +1,7 @@
+//************************************************
+//  1x1x1
+// selbst geschrieben, da der IHK-Rätselgenerator Fehler anzeigt
+//************************************************
+Dimension 1,1,1
+Teil 1:  0 0 0 0 0 0
+

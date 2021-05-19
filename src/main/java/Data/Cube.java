@@ -10,14 +10,7 @@ public class Cube {
     private int[] triangle;
     private CubeType cubeType = null;
     private int rotations = 0;
-    private static HashMap<CubeType, Integer> maxConnections = new HashMap<>();
-    static {
-        maxConnections.put(CubeType.ECKE, 3);
-        maxConnections.put(CubeType.KANTE, 2);
-        maxConnections.put(CubeType.SEITE, 4);
-        maxConnections.put(CubeType.MITTE, 24);
-    }
-    int connectionsFound = 0;
+
 
     public Cube(String name, int[] triangle) {
         this.name = name;
@@ -39,29 +32,42 @@ public class Cube {
         return name;
     }
 
-    public CubeType getType() {
+    public CubeType getType(Vektor dim) {
+
         if (cubeType != null) return cubeType;
         int triangles = 0;
         for (int i : triangle) {
             if (i != 0) triangles++;
         }
-        switch (triangles) {
-            case 3:
-                cubeType = CubeType.ECKE;
-                break;
-            case 4:
-                cubeType = CubeType.KANTE;
-                break;
-            case 5:
-                cubeType = CubeType.SEITE;
-                break;
-            case 6:
-                cubeType = CubeType.MITTE;
-                break;
-            default:
-                throw new RuntimeException("WTF");
-        }
+        cubeType = getCubeType(dim, triangles);
         return cubeType;
+    }
+
+    public static CubeType getCubeType(Vektor dim, int connections) {
+        int oneDimension = (dim.x == 1 ? 1 : 0) + (dim.y == 1 ? 1 : 0) + (dim.z == 1 ? 1 : 0);
+        if (oneDimension == 0) {
+            switch (connections) {
+                case 3: return CubeType.ECKE;
+                case 4: return CubeType.KANTE;
+                case 5: return CubeType.SEITE;
+                case 6: return CubeType.MITTE;
+                default: return null;
+            }
+        } else if (oneDimension == 1) {
+            switch (connections) {
+                case 2: return CubeType.ECKE;
+                case 3: return CubeType.KANTE;
+                case 4: return CubeType.MITTE;
+                default: return null;
+            }
+        }
+        else if (oneDimension == 2) {
+            switch (connections) {
+                case 1: return CubeType.ECKE;
+                case 2: return CubeType.MITTE;
+                default: return null;
+            }
+        } else throw new RuntimeException("RIP4");
     }
 
     public int getTriangle(int index) {
@@ -72,12 +78,13 @@ public class Cube {
         return triangle[direction.i];
     }
 
+    public int[] getTriangles() {
+        return triangle;
+    }
+
     public boolean hasNextRotation(boolean reset) {
-        if (connectionsFound < maxConnections.get(getType()) && rotations != 24) return true;
-        if (reset) {
-            rotations = 0;
-            connectionsFound = 0;
-        }
+        if (rotations != 24) return true;
+        if (reset) rotations = 0;
         return false;
     }
 
@@ -107,7 +114,6 @@ public class Cube {
                     break;
             }
         } while (!checkBounds(x, y, z, dim) && hasNextRotation(false));
-        connectionsFound++;
     }
 
     public boolean checkBounds(int x, int y, int z, Vektor dim) {
@@ -133,8 +139,8 @@ public class Cube {
             rotated[DOWN.i] = rotateTriangle(triangle[LEFT.i], false);
             rotated[RIGHT.i] = rotateTriangle(triangle[DOWN.i], false);
         }
-        rotated[FRONT.i] = rotateTriangle(triangle[2], clockwise);
-        rotated[BACK.i] = rotateTriangle(triangle[4], !clockwise);
+        rotated[FRONT.i] = rotateTriangle(triangle[FRONT.i], clockwise);
+        rotated[BACK.i] = rotateTriangle(triangle[BACK.i], !clockwise);
         triangle = rotated;
     }
 

@@ -1,6 +1,7 @@
 package Utils;
 
 import Data.Cube;
+import Data.CubeType;
 import Data.Storage;
 
 import java.io.File;
@@ -16,7 +17,10 @@ public class FileHandler {
     public static List<Storage> transformFiles(List<File> files) {
         List<Storage> list = new ArrayList<>();
         for (File file : files) {
-            list.add(transformFile(file));
+            System.out.println("Transforming..." + file.getAbsolutePath());
+            Storage storage = transformFile(file);
+            System.out.println("Adding..." + (storage == null));
+            if (storage != null) list.add(storage);
         }
         return list;
     }
@@ -37,17 +41,23 @@ public class FileHandler {
                 continue;
             }
             if (line.startsWith("Dimension")) {
-                storage.setDimensionString(line);
+                if (!storage.setDimensionString(line)) break;
                 continue;
             }
             String[] split = line.split("(:)\\s+");
+            if (split.length != 2) break;
             String[] numberStr = split[1].split("\\s+");
+            if (numberStr.length != 6) break;
             int[] triangles = new int[6];
             for (int i = 0; i < 6; i++) {
                 triangles[i] = Integer.parseInt(numberStr[i]);
             }
             storage.addCube(new Cube(split[0], triangles));
         }
+        if (!storage.isFinished()) return null;
+        storage.orderGroups();
+        int edges = storage.getEdgeCount();
+        if (storage.getOrderedCubes().get(CubeType.ECKE).size() != edges) return null;
         /*try {
             storage.orderGroups();
         } catch (RuntimeException ignored) {}*/
@@ -57,6 +67,8 @@ public class FileHandler {
     public static void transformIntoFiles(List<Storage> storages) {
         for (Storage storage : storages) {
             try {
+                if (storage.getSolution() == null) continue;
+                System.out.println("Transforming back..." + storage.getSolutionPath());
                 transformIntoFile(storage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -73,10 +85,16 @@ public class FileHandler {
         }
         fileWriter.write(storage.getDimensionString() + "\n");
         String[][][] solution = storage.getSolution();
-        for (int i = 0; i < solution.length; i++) {
-            for (int j = 0; j < solution[0].length; j++) {
-                for (int k = 0; k < solution[0][0].length; k++) {
-                    fileWriter.write("[" + i + "," + j + "," + k + "] " + storage.getCube(solution[i][j][k]) + "\n");
+        for (int x = 0; x < solution.length; x++) {
+            for (int y = 0; y < solution[0].length; y++) {
+                for (int z = 0; z < solution[0][0].length; z++) {
+                    Cube cube = storage.getCube(solution[x][y][z]);
+                    StringBuilder sb = new StringBuilder(cube.getName()).append(": ");
+                    for (int i : cube.getTriangles()) {
+                        sb.append(i).append(' ');
+                    }
+                    sb.deleteCharAt(sb.length() - 1);
+                    fileWriter.write("[" + (x + 1) + "," + (y + 1) + "," + (z + 1) + "] " + sb + "\n");
                 }
             }
         }

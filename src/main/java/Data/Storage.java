@@ -37,6 +37,10 @@ public class Storage {
         solutionPath = sb.toString();
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public String getSolutionPath() {
         return solutionPath;
     }
@@ -80,22 +84,28 @@ public class Storage {
 
     public void orderGroups() {
         for (Cube cube : cubes.values()) {
-            System.out.println(cube);
-            cubeTypeMap.get(cube.getType()).add(cube.getName());
+            try {
+                cubeTypeMap.get(cube.getType(getDimVector())).add(cube.getName());
+            } catch (NullPointerException e) {
+                continue;
+            }
+
         }
-        System.out.println(cubeTypeMap);
     }
 
     public HashMap<CubeType, ArrayList<String>> getOrderedCubes() {
         return cubeTypeMap;
     }
 
-    public void setDimensionString(String s) {
-        dimensionString = s;
+    public boolean setDimensionString(String s) {
         String[] split = s.split("\\s+")[1].split(",");
+        if (split.length != 3) return false;
         dimX = Integer.parseInt(split[0]);
         dimY = Integer.parseInt(split[1]);
         dimZ = Integer.parseInt(split[2]);
+        if (dimX == 1 && dimY == 1 && dimZ == 1) return false;
+        dimensionString = s;
+        return true;
     }
 
     public String getDimensionString() {
@@ -108,6 +118,18 @@ public class Storage {
 
     public String[][][] getSolution() {
         return solution;
+    }
+
+    public boolean isFinished() {
+        return dimensionString != null && cubes.size() == dimX * dimY * dimZ;
+    }
+
+    public int getEdgeCount() {
+        int count = 1;
+        if (dimX > 1) count *= 2;
+        if (dimY > 1) count *= 2;
+        if (dimZ > 1) count *= 2;
+        return count;
     }
 
     @Override
