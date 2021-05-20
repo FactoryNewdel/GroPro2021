@@ -12,6 +12,7 @@ public class Storage {
     private int dimX;
     private int dimY;
     private int dimZ;
+    private Vektor dimVector = null;
     private HashMap<String, Cube> cubes;
     private HashMap<CubeType, ArrayList<String>> cubeTypeMap;
     private String[][][] solution;
@@ -76,7 +77,9 @@ public class Storage {
      * @return Vektordarstellung der Dimensionen
      */
     public Vektor getDimVector() {
-        return new Vektor(dimX, dimY, dimZ);
+        if (dimVector != null) return dimVector;
+        dimVector = new Vektor(dimX, dimY, dimZ);
+        return dimVector;
     }
 
     /**
