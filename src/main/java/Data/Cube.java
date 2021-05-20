@@ -11,29 +11,26 @@ public class Cube {
     private CubeType cubeType = null;
     private int rotations = 0;
 
-
+    /**
+     * Standardkonstruktor
+     * @param name Bezeichnung des Würfels
+     * @param triangle Array mit 6 Ganzzahlen zur Darstellung der Dreiecke am Würfel
+     */
     public Cube(String name, int[] triangle) {
         this.name = name;
         this.triangle = triangle;
-        lastState = triangle;
-    }
-
-    public Cube(Cube other) {
-        this.name = other.name;
-        this.triangle = other.triangle;
-        this.cubeType = other.cubeType;
-    }
-
-    public Cube clone() {
-        return new Cube(this);
     }
 
     public String getName() {
         return name;
     }
 
+    /**
+     * Berechnet den Typen des Würfels auf Grundlage der Seiten mit und ohne Dreieck
+     * @param dim Dimension des Ergebnisquaders
+     * @return Berechneter Typ
+     */
     public CubeType getType(Vektor dim) {
-
         if (cubeType != null) return cubeType;
         int triangles = 0;
         for (int i : triangle) {
@@ -43,6 +40,12 @@ public class Cube {
         return cubeType;
     }
 
+    /**
+     * Statische Helfermethode zur Berechnung des Würfeltyps
+     * @param dim Dimension des Ergebnisquaders
+     * @param connections Dreieck des Würfers
+     * @return Typ des Würfels
+     */
     public static CubeType getCubeType(Vektor dim, int connections) {
         int oneDimension = (dim.x == 1 ? 1 : 0) + (dim.y == 1 ? 1 : 0) + (dim.z == 1 ? 1 : 0);
         if (oneDimension == 0) {
@@ -70,10 +73,10 @@ public class Cube {
         } else throw new RuntimeException("RIP4");
     }
 
-    public int getTriangle(int index) {
-        return triangle[index];
-    }
-
+    /**
+     * @param direction Seite, dessen Dreieck gesucht ist
+     * @return Dreieck an dieser Seite
+     */
     public int getTriangle(Direction direction) {
         return triangle[direction.i];
     }
@@ -82,16 +85,25 @@ public class Cube {
         return triangle;
     }
 
+    /**
+     * Prüft, ob weitere Rotationen des Würfels möglich sind
+     * @param reset Rotation zurücksetzen nach letzter Rotation
+     * @return Ob eine nächste Operation möglich ist
+     */
     public boolean hasNextRotation(boolean reset) {
         if (rotations != 24) return true;
         if (reset) rotations = 0;
         return false;
     }
 
-    private int[] lastState;
-    int i = 0;
+    /**
+     * Dreht den Würfel zur nächsten möglichen Rotation
+     * @param x x-Koordinate im Quader
+     * @param y y-Koordinate im Quader
+     * @param z z-Koordinate im Quader
+     * @param dim Dimension des Quaders
+     */
     public void nextRotation(int x, int y, int z, Vektor dim) {
-        //lastState = triangle;
         do {
             rotations++;
             rotateX(true);
@@ -116,6 +128,14 @@ public class Cube {
         } while (!checkBounds(x, y, z, dim) && hasNextRotation(false));
     }
 
+    /**
+     * Überprüft, ob Dreieck des Würfels aus dem Quader heraus zeigt
+     * @param x x-Koordinate im Quader
+     * @param y y-Koordinate im Quader
+     * @param z z-Koordinate im Quader
+     * @param dim Dimension des Quaders
+     * @return ob das Dreieck im Quader ist
+     */
     public boolean checkBounds(int x, int y, int z, Vektor dim) {
         if (x == 0 && triangle[BACK.i] != 0) return false;
         if (x == dim.x - 1 && triangle[FRONT.i] != 0) return false;
@@ -126,6 +146,10 @@ public class Cube {
         return true;
     }
 
+    /**
+     * Rotiert den Würfel um x-Achse
+     * @param clockwise Uhrzeigersinn
+     */
     public void rotateX(boolean clockwise) {
         int[] rotated = new int[6];
         if (clockwise) {
@@ -144,6 +168,10 @@ public class Cube {
         triangle = rotated;
     }
 
+    /**
+     * Rotiert den Würfel um y-Achse
+     * @param clockwise Uhrzeigersinn
+     */
     public void rotateY(boolean clockwise) {
         int[] rotated = new int[6];
         if (clockwise) {
@@ -162,6 +190,10 @@ public class Cube {
         triangle = rotated;
     }
 
+    /**
+     * Rotiert den Würfel um z-Achse
+     * @param clockwise Uhrzeigersinn
+     */
     public void rotateZ(boolean clockwise) {
         int[] rotated = new int[6];
         if (clockwise) {
@@ -180,6 +212,12 @@ public class Cube {
         triangle = rotated;
     }
 
+    /**
+     * Rotiert ein Dreieck
+     * @param value Notation des Dreiecks
+     * @param clockwise Uhrzeigersinn
+     * @return rotierte Notation des Dreiecks
+     */
     private int rotateTriangle(int value, boolean clockwise) {
         if (value == 0) return 0;
         if (clockwise) {
@@ -191,6 +229,10 @@ public class Cube {
         }
     }
 
+    /**
+     * String-Darstellung wie in Beispieldatei
+     * @return Stringdarstellung
+     */
     @Override
     public String toString() {
         return name + ": " + Arrays.toString(triangle);

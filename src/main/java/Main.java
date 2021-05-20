@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+    /**
+     * Start- und Hauptmethode für das Programm
+     * @param args Dateipfade, durch ',' getrennt
+     */
     public static void main(String[] args) {
         List<File> files = new ArrayList<>();
         for (String path : args) {
@@ -28,9 +32,7 @@ public class Main {
             }
             files.add(file);
         }
-
         List<Storage> storages = FileHandler.transformFiles(files);
-
         System.out.println("STORAGES = " + storages);
         for (Storage storage : storages) { ;
             System.out.println("Solving " + storage.getPath());
@@ -38,7 +40,6 @@ public class Main {
             new Puzzle(storage).solve();
             System.out.println("Time elapsed: " + (System.currentTimeMillis() - start));
         }
-
         FileHandler.transformIntoFiles(storages);
     }
 }

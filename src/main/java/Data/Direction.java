@@ -1,5 +1,8 @@
 package Data;
 
+/**
+ * Stellt Index im Dreieck-Array dar
+ */
 public enum Direction {
     UP(0),
     LEFT(1),

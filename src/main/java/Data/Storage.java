@@ -16,6 +16,10 @@ public class Storage {
     private HashMap<CubeType, ArrayList<String>> cubeTypeMap;
     private String[][][] solution;
 
+    /**
+     * Berechnet Output-Pfad und initialisiert Objekt
+     * @param path Input-Pfad
+     */
     public Storage(String path) {
         this.path = path;
         comments = new ArrayList<>();
@@ -25,7 +29,6 @@ public class Storage {
         cubeTypeMap.put(KANTE, new ArrayList<>());
         cubeTypeMap.put(SEITE, new ArrayList<>());
         cubeTypeMap.put(MITTE, new ArrayList<>());
-        //TODO solutionPath
         String[] pathSplit = path.split("\\.");
         StringBuilder sb = new StringBuilder();
         int length = pathSplit.length;
@@ -45,6 +48,10 @@ public class Storage {
         return solutionPath;
     }
 
+    /**
+     * Fügt Kommentar hinzu, der aus der Eingabedatei gelesen wurde
+     * @param comment Kommentar zum Hinzufügen
+     */
     public void addComment(String comment) {
         comments.add(comment);
     }
@@ -65,23 +72,33 @@ public class Storage {
         return dimZ;
     }
 
+    /**
+     * @return Vektordarstellung der Dimensionen
+     */
     public Vektor getDimVector() {
         return new Vektor(dimX, dimY, dimZ);
     }
 
+    /**
+     * Fügt Würfelobjekt zu Map hinzu. Name dient als Schlüsselattribut
+     * @param cube Würfelobjekt
+     */
     public void addCube(Cube cube) {
         cubes.put(cube.getName(), cube);
     }
 
+    /**
+     * @param name Bezeichnung des Würfels
+     * @return Würfel aus Map
+     */
     public Cube getCube(String name) {
         if (!cubes.containsKey(name)) return null;
         return cubes.get(name);
     }
 
-    public Map<String, Cube> getCubes() {
-        return cubes;
-    }
-
+    /**
+     * Sortiert Würfel nach Typen in neue Map
+     */
     public void orderGroups() {
         for (Cube cube : cubes.values()) {
             try {
@@ -89,7 +106,6 @@ public class Storage {
             } catch (NullPointerException e) {
                 continue;
             }
-
         }
     }
 
@@ -97,6 +113,11 @@ public class Storage {
         return cubeTypeMap;
     }
 
+    /**
+     * Legt Dimensionen fest
+     * @param s Zeile aus Eingabedatei, in der die Dimension steht
+     * @return ob dir Dimension gültig ist
+     */
     public boolean setDimensionString(String s) {
         String[] split = s.split("\\s+")[1].split(",");
         if (split.length != 3) return false;
@@ -120,10 +141,19 @@ public class Storage {
         return solution;
     }
 
+    /**
+     * Testes Objekt auf Gültigkeit
+     * Gültig bedeutet, dass die Dimension angegeben wurde und
+     * es der Dimension entsprechend genug Würfel gibt
+     * @return ob Storage-Objekt gültig ist
+     */
     public boolean isFinished() {
         return dimensionString != null && cubes.size() == dimX * dimY * dimZ;
     }
 
+    /**
+     * @return Wie viele Ecken ein Quader hat
+     */
     public int getEdgeCount() {
         int count = 1;
         if (dimX > 1) count *= 2;

@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class FileHandler {
+    /**
+     * Liest Dateien aus
+     * @param files Wandelt Liste an Files um
+     * @return Storage-Liste
+     */
     public static List<Storage> transformFiles(List<File> files) {
         List<Storage> list = new ArrayList<>();
         for (File file : files) {
@@ -25,6 +30,11 @@ public class FileHandler {
         return list;
     }
 
+    /**
+     * Liest Datei aus
+     * @param file Wandelt Datei um
+     * @return Storage-Liste
+     */
     public static Storage transformFile(File file) {
         Storage storage = new Storage(file.getAbsolutePath());
         Scanner scanner;
@@ -58,12 +68,13 @@ public class FileHandler {
         storage.orderGroups();
         int edges = storage.getEdgeCount();
         if (storage.getOrderedCubes().get(CubeType.ECKE).size() != edges) return null;
-        /*try {
-            storage.orderGroups();
-        } catch (RuntimeException ignored) {}*/
         return storage;
     }
 
+    /**
+     * Erstell Ausgabedatein
+     * @param storages Liste von Storage-Objekten
+     */
     public static void transformIntoFiles(List<Storage> storages) {
         for (Storage storage : storages) {
             try {
@@ -77,6 +88,11 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Erstellt Ausgabedatei
+     * @param storage Storage-Objekt zum umwandeln
+     * @throws IOException Falls die Ausgabedatei nicht erstellt werden konnte
+     */
     public static void transformIntoFile(Storage storage) throws IOException {
         FileWriter fileWriter = new FileWriter(storage.getSolutionPath());
         System.out.println(storage.getSolutionPath());

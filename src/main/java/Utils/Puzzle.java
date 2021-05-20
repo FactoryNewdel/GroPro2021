@@ -12,13 +12,22 @@ public class Puzzle {
     private Vektor dimVektor;
     private String[][][] solution;
 
+    private HashMap<CubeType, ArrayList<String>> map;
+
+    /**
+     * Berechnet Dimensionsvektor aus Storage-Objekt und
+     * legt leeres solution-Objekt (3-dim-Array) an
+     * @param storage Objekt, das alle Daten aus der Eingabedatei enthält
+     */
     public Puzzle(Storage storage) {
         this.storage = storage;
         dimVektor = storage.getDimVector();
         solution = new String[dimVektor.x][dimVektor.y][dimVektor.z];
     }
 
-        HashMap<CubeType, ArrayList<String>> map;
+    /**
+     * Sucht eine Lösung für diese Datei/dieses Storage-Objekt
+     */
     public void solve() {
         map = storage.getOrderedCubes();
         boolean b = dimVektor.x > 1 && dimVektor.y > 1 && dimVektor.z > 1;
@@ -33,6 +42,13 @@ public class Puzzle {
         }
     }
 
+    /**
+     * Sucht passendes Teil und ruft sich selbst auf, wenn gefunden
+     * @param x x-Koordinate im Quader
+     * @param y y-Koordinate im Quader
+     * @param z z-Koordinate im Quader
+     * @return ob eine Lösung gefunden wurde
+     */
     private boolean findFitOrdered(int x, int y, int z/*, HashMap<CubeType, ArrayList<String>> map*/) {
         int connections = 0;
         if (x > 0) connections++;
@@ -84,6 +100,14 @@ public class Puzzle {
         return false;
     }
 
+    /**
+     * Schaut, ob Würfel neben die anderen schon besetzen Positionen passt
+     * @param x x-Koordinate an der gesucht wird
+     * @param y y-Koordinate an der gesucht wird
+     * @param z z-Koordinate an der gesucht wird
+     * @param cube Würfel, der an diese Stelle gesetzt werden soll
+     * @return ob der Würfel passt
+     */
     private boolean isFitting(int x, int y, int z, Cube cube) {
         Cube cube1;
         if (x > 0 && (cube1 = storage.getCube(solution[x - 1][y][z])) != null) {
@@ -107,6 +131,13 @@ public class Puzzle {
         return true;
     }
 
+    /**
+     * Prüft, ob 2 Dreiecke beim zusammen legen passen
+     * @param triangle Erstes Dreieck zur Überprüfung
+     * @param triangle1 Zweites Dreieck zur Überprüfung
+     * @param topBottom ob an Stelle 1 oder 6 (Oben oder Unten) geschaut wird
+     * @return ob Dreiecke passen
+     */
     private boolean trianglesFit(int triangle, int triangle1, boolean topBottom) {
         if (triangle == 0 || triangle1 == 0) return false;
 
@@ -121,7 +152,6 @@ public class Puzzle {
             if (triangle == 3 && triangle1 != 4) return false;
             if (triangle == 4 && triangle1 != 3) return false;
         }
-
         return true;
     }
 }
