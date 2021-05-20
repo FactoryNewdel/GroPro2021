@@ -78,8 +78,11 @@ public class FileHandler {
     public static void transformIntoFiles(List<Storage> storages) {
         for (Storage storage : storages) {
             try {
-                if (storage.getSolution() == null) continue;
                 System.out.println("Transforming back..." + storage.getSolutionPath());
+                if (storage.getSolution() == null) {
+                    transformIntoFileNoSolution(storage);
+                    continue;
+                }
                 transformIntoFile(storage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -93,7 +96,7 @@ public class FileHandler {
      * @param storage Storage-Objekt zum umwandeln
      * @throws IOException Falls die Ausgabedatei nicht erstellt werden konnte
      */
-    public static void transformIntoFile(Storage storage) throws IOException {
+    private static void transformIntoFile(Storage storage) throws IOException {
         FileWriter fileWriter = new FileWriter(storage.getSolutionPath());
         System.out.println(storage.getSolutionPath());
         for (String comment : storage.getComments()) {
@@ -116,5 +119,22 @@ public class FileHandler {
         }
         fileWriter.close();
     }
-
+    /**
+     * Erstellt Ausgabedatei mit der Anmerkung, dass keine Lösung existiert
+     * @param storage Storage-Objekt zum umwandeln
+     * @throws IOException Falls die Ausgabedatei nicht erstellt werden konnte
+     */
+    public static void transformIntoFileNoSolution(Storage storage) throws IOException {
+        FileWriter fileWriter = new FileWriter(storage.getSolutionPath());
+        System.out.println(storage.getSolutionPath());
+        for (String comment : storage.getComments()) {
+            fileWriter.write(comment + "\n");
+        }
+        fileWriter.write(storage.getDimensionString() + "\n");
+        fileWriter.write("//***** Keine Lösung *****");
+        for (Cube cube : storage.getCubes().values()) {
+            fileWriter.write(cube + "\n");
+        }
+        fileWriter.close();
+    }
 }

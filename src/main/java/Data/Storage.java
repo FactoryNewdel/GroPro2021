@@ -96,6 +96,9 @@ public class Storage {
         return cubes.get(name);
     }
 
+    public HashMap<String, Cube> getCubes() {
+        return cubes;
+    }
     /**
      * Sortiert Würfel nach Typen in neue Map
      */

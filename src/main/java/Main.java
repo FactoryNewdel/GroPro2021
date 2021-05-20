@@ -32,6 +32,10 @@ public class Main {
             }
             files.add(file);
         }
+        if (files.isEmpty()) {
+            System.out.println("No files specified! Shutting down...");
+            System.exit(-1);
+        }
         List<Storage> storages = FileHandler.transformFiles(files);
         System.out.println("STORAGES = " + storages);
         for (Storage storage : storages) { ;
