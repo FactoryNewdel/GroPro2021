@@ -105,14 +105,17 @@ public class Storage {
     /**
      * Sortiert Würfel nach Typen in neue Map
      */
-    public void orderGroups() {
+    public boolean orderGroups() {
         for (Cube cube : cubes.values()) {
             try {
-                cubeTypeMap.get(cube.getType(getDimVector())).add(cube.getName());
+                CubeType type = cube.getType(getDimVector());
+                if (type == null) return false;
+                cubeTypeMap.get(type).add(cube.getName());
             } catch (NullPointerException e) {
                 continue;
             }
         }
+        return true;
     }
 
     public HashMap<CubeType, ArrayList<String>> getOrderedCubes() {

@@ -3,6 +3,7 @@ package Utils;
 import Data.Cube;
 import Data.CubeType;
 import Data.Storage;
+import Data.Vektor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,7 +25,7 @@ public class FileHandler {
         for (File file : files) {
             System.out.println("Transforming..." + file.getAbsolutePath());
             Storage storage = transformFile(file);
-            System.out.println("Adding..." + (storage == null));
+            System.out.println("Adding..." + (storage != null));
             if (storage != null) list.add(storage);
         }
         return list;
@@ -60,12 +61,16 @@ public class FileHandler {
             if (numberStr.length != 6) break;
             int[] triangles = new int[6];
             for (int i = 0; i < 6; i++) {
-                triangles[i] = Integer.parseInt(numberStr[i]);
+                int tri = Integer.parseInt(numberStr[i]);
+                if (tri < 0 || tri > 4) break;
+                triangles[i] = tri;
             }
             storage.addCube(new Cube(split[0], triangles));
         }
         if (!storage.isFinished()) return null;
-        storage.orderGroups();
+        Vektor v = storage.getDimVector();
+        if (v.x == 1 && v.y == 1 && v.z == 1) return null;
+        if (!storage.orderGroups()) return null;
         int edges = storage.getEdgeCount();
         if (storage.getOrderedCubes().get(CubeType.ECKE).size() != edges) return null;
         return storage;

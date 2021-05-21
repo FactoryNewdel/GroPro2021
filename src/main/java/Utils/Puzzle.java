@@ -17,6 +17,7 @@ public class Puzzle {
     /**
      * Berechnet Dimensionsvektor aus Storage-Objekt und
      * legt leeres solution-Objekt (3-dim-Array) an
+     *
      * @param storage Objekt, das alle Daten aus der Eingabedatei enthält
      */
     public Puzzle(Storage storage) {
@@ -30,20 +31,22 @@ public class Puzzle {
      */
     public void solve() {
         map = storage.getOrderedCubes();
-        boolean b = dimVektor.x > 1 && dimVektor.y > 1 && dimVektor.z > 1;
-        if (b) {
-            Cube startCube = storage.getCube(map.get(CubeType.ECKE).get(0));
-            map.get(CubeType.ECKE).remove(startCube.getName());
-            while (!startCube.checkBounds(0, 0, 0, dimVektor)) startCube.nextRotation(0, 0, 0, dimVektor);
-            solution[0][0][0] = startCube.getName();
-        }
-        if (findFitOrdered(b ? 1 : 0, 0, 0)) {
+        Cube startCube = storage.getCube(map.get(CubeType.ECKE).get(0));
+        map.get(CubeType.ECKE).remove(startCube.getName());
+        while (!startCube.checkBounds(0, 0, 0, dimVektor)) startCube.nextRotation(0, 0, 0, dimVektor);
+        solution[0][0][0] = startCube.getName();
+        Vektor v = new Vektor(0,0,0);
+        if (dimVektor.x > 1) v.x += 1;
+        else if (dimVektor.y > 1) v.y += 1;
+        else if (dimVektor.z > 1) v.z += 1;
+        if (findFitOrdered(v.x, v.y, v.z)) {
             storage.setSolution(solution);
         }
     }
 
     /**
      * Sucht passendes Teil und ruft sich selbst auf, wenn gefunden
+     *
      * @param x x-Koordinate im Quader
      * @param y y-Koordinate im Quader
      * @param z z-Koordinate im Quader
@@ -102,9 +105,10 @@ public class Puzzle {
 
     /**
      * Schaut, ob Würfel neben die anderen schon besetzen Positionen passt
-     * @param x x-Koordinate an der gesucht wird
-     * @param y y-Koordinate an der gesucht wird
-     * @param z z-Koordinate an der gesucht wird
+     *
+     * @param x    x-Koordinate an der gesucht wird
+     * @param y    y-Koordinate an der gesucht wird
+     * @param z    z-Koordinate an der gesucht wird
      * @param cube Würfel, der an diese Stelle gesetzt werden soll
      * @return ob der Würfel passt
      */
@@ -133,14 +137,14 @@ public class Puzzle {
 
     /**
      * Prüft, ob 2 Dreiecke beim zusammen legen passen
-     * @param triangle Erstes Dreieck zur Überprüfung
+     *
+     * @param triangle  Erstes Dreieck zur Überprüfung
      * @param triangle1 Zweites Dreieck zur Überprüfung
      * @param topBottom ob an Stelle 1 oder 6 (Oben oder Unten) geschaut wird
      * @return ob Dreiecke passen
      */
     private boolean trianglesFit(int triangle, int triangle1, boolean topBottom) {
         if (triangle == 0 || triangle1 == 0) return false;
-
         if (topBottom) {
             if (triangle == 1 && triangle1 != 4) return false;
             if (triangle == 4 && triangle1 != 1) return false;
